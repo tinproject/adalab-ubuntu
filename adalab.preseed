@@ -1,0 +1,86 @@
+# documentation: https://help.ubuntu.com/lts/installation-guide/amd64/apbs04.html
+
+## Localization
+ubiquity	debian-installer/language	string	es
+ubiquity	debian-installer/country	string  ES
+ubiquity	debian-installer/locale	string	es_ES.UTF-8
+
+
+## Network configuration
+# Try to use default DHCP
+
+
+## Network console
+# Not used
+
+
+## Mirror settings
+ubiquity	mirror/country	string	ES
+
+
+## Account setup
+ubiquity	passwd/root-login	boolean	false
+ubiquity	passwd/make-user	boolean	true
+ubiquity	passwd/auto-login	boolean	false
+
+ubiquity	passwd/user-fullname	string  Awesome Adalaber
+ubiquity	passwd/username	string  adalaber
+d-i passwd/user-password password insecure
+d-i passwd/user-password-again password insecure
+#d-i passwd/user-password-crypted password [crypt(3) hash]
+
+
+## Clock and time zone setup
+ubiquity	clock-setup/utc	boolean	true
+ubiquity	clock-setup/ntp	boolean	true
+ubiquity	clock-setup/ntp-server	string	ntp.ubuntu.com
+ubiquity	tzsetup/country/ES	select	Europe/Madrid
+
+
+## Partitioning
+
+# Old style using d-i command
+#d-i partman-auto/disk string /dev/sda
+#d-i partman-auto/method string regular
+#d-i partman-lvm/device_remove_lvm boolean true
+#d-i partman-md/device_remove_md boolean true
+#d-i partman-auto/choose_recipe select atomic
+
+
+## Base system installation
+# Not used...
+
+
+## Apt setup
+ubiquity	apt-setup/universe	boolean	true
+ubiquity	apt-setup/multiverse	boolean	true
+ubiquity	apt-setup/contrib	boolean	true
+ubiquity	apt-setup/backports	boolean	true
+ubiquity	apt-setup/restricted	boolean	true
+ubiquity	apt-setup/non-free	boolean	true
+
+ubiquity	apt-setup/services-select	multiselect	security, updates
+ubiquity	apt-setup/services-select-ubuntu	multiselect	security
+
+
+## Package selection
+popularity-contest	popularity-contest/participate	boolean	false
+unattended-upgrades	unattended-upgrades/enable_auto_updates	boolean	true
+# TBD ????
+
+#tasksel tasksel/first multiselect ubuntu-desktop
+#tasksel tasksel/first multiselect lamp-server, print-server
+#tasksel tasksel/first multiselect kubuntu-desktop
+
+
+## Boot loader installation
+grub-pc	grub-pc/timeout	string	50
+
+ubiquity	grub-installer/only_debian	boolean	true
+ubiquity	grub-installer/grub2_instead_of_grub_legacy	boolean	true
+
+
+## Finishing up the installation
+#ubiquity	ubiquity/poweroff	boolean	true
+ubiquity	ubiquity/reboot	boolean	true
+
