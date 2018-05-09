@@ -41,10 +41,49 @@ download: download-check
 
 
 
-clean:
-	rm -rf build/*
+clean-build:
+	@echo "--> Cleaning build files..."
+	@chmod -R +w build
+	@rm -rf build
+
+clean: clean-build
 
 clean-full: clean
 	rm -rf dist/*
 	rm -rf downloads/*
 
+
+# This task extract ISO image contents for later modifications
+extract-image: clean-build
+	@echo "--> Mounting ISO image (needs sudo)..."
+	@mkdir -p iso_mount
+	@mkdir -p build
+	@-sudo mount -o loop downloads/$(UBUNTU_ISO_NAME) iso_mount
+	@echo "--> Copying ISO image files to build folder..."
+	@-cp -rT ./iso_mount ./build
+	@echo "--> Unmounting ISO image (needs sudo)..."
+	@sudo umount iso_mount
+	@rm -rf iso_mount
+
+# This task change the menu to add
+edit-menu: extract-image
+	@echo "--> Modifiying ISO image menu, add Adalab installer..."
+	@chmod +w build/isolinux
+	@chmod +w build/isolinux/txt.cfg
+	@sed -i 's/^default.*$$/default\ adalab-install/g' build/isolinux/txt.cfg
+
+	@echo "label adalab-install" >> build/isolinux/txt.cfg
+	@echo "  menu label ^Install Adalab Ubuntu" >> build/isolinux/txt.cfg
+	@echo "  kernel /casper/vmlinuz.efi" >> build/isolinux/txt.cfg
+	@echo "  append  file=/cdrom/custom/adalab.preseed auto=true priority=critical debian-installer/locale=es_ES keyboard-configuration/layoutcode=es ubiquity/reboot=true languagechooser/language-name=Spanish countrychooser/shortlist=ES localechooser/supported-locales=es_ES.UTF-8 boot=casper automatic-ubiquity initrd=/casper/initrd.lz quiet splash noprompt noshell ---" >> build/isolinux/txt.cfg
+
+copy-custom-files:
+	@echo "--> Copying custom files (preseed & provision)..."
+	@mkdir -p build/custom
+	@cp adalab.preseed build/custom/
+	@cp adalab_provision.yml build/custom/
+
+create-iso-image: copy-custom-files
+	@echo "--> Creating custom Adalab Ubuntu ISO..."
+	@xorrisofs -D -r -V "ADALAB_UBUNTU" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat \
+		-no-emul-boot -boot-load-size 4 -boot-info-table -o dist/adalab-$(UBUNTU_ISO_NAME) build
