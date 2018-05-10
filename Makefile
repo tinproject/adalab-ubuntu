@@ -43,6 +43,7 @@ download: download-check
 
 clean-build:
 	@echo "--> Cleaning build files..."
+	@mkdir -p build
 	@chmod -R +w build
 	@rm -rf build
 
@@ -66,18 +67,33 @@ extract-image: clean-build
 	@rm -rf iso_mount
 
 # This task change the menu to add
+ADALAB_KERNEL_PARAMS=file=/cdrom/custom/adalab.preseed boot=casper automatic-ubiquity initrd=/casper/initrd.lz quiet splash priority=low debian-installer/locale=es_ES keyboard-configuration/layoutcode=es languagechooser/language-name=Spanish countrychooser/shortlist=ES localechooser/supported-locales=es_ES.UTF-8
+
 edit-menu: extract-image
-	@echo "--> Modifiying ISO image menu, add Adalab installer..."
+	@echo "--> Modifiying ISOLINUX image menu, add Adalab installer..."
 	@chmod +w build/isolinux
 	@chmod +w build/isolinux/txt.cfg
-	@sed -i 's/^default.*$$/default\ adalab-install/g' build/isolinux/txt.cfg
+#	@sed -i 's/^default.*$$/default\ adalab-install/g' build/isolinux/txt.cfg
+	@echo "default adalab-install" > build/isolinux/txt.cfg
 
 	@echo "label adalab-install" >> build/isolinux/txt.cfg
 	@echo "  menu label ^Install Adalab Ubuntu" >> build/isolinux/txt.cfg
-	@echo "  kernel /casper/vmlinuz.efi" >> build/isolinux/txt.cfg
-	@echo "  append  file=/cdrom/custom/adalab.preseed auto=true priority=critical debian-installer/locale=es_ES keyboard-configuration/layoutcode=es ubiquity/reboot=true languagechooser/language-name=Spanish countrychooser/shortlist=ES localechooser/supported-locales=es_ES.UTF-8 boot=casper automatic-ubiquity initrd=/casper/initrd.lz quiet splash noprompt noshell ---" >> build/isolinux/txt.cfg
+	@echo "  kernel /casper/vmlinuz" >> build/isolinux/txt.cfg
+	@echo "  append	$(ADALAB_KERNEL_PARAMS) ---" >> build/isolinux/txt.cfg
+	@echo "" >> build/isolinux/txt.cfg
+	@echo "TIMEOUT 50" >> build/isolinux/txt.cfg
 
-copy-custom-files:
+	@echo "--> Modifiying GRUB image menu, add Adalab installer..."
+	@chmod +w build/boot/grub/grub.cfg
+	@echo "menuentry \"Install Adalab Ubuntu\" {" >> build/boot/grub/grub.cfg
+	@echo "	set gfxpayload=keep" >> build/boot/grub/grub.cfg
+	@echo "	linux	/casper/vmlinuz	$(ADALAB_KERNEL_PARAMS) ---" >> build/boot/grub/grub.cfg
+	@echo "	initrd	/casper/initrd.lz" >> build/boot/grub/grub.cfg
+	@echo "}" >> build/boot/grub/grub.cfg
+
+
+# This task add the custom preseed and provision files
+copy-custom-files: edit-menu
 	@echo "--> Copying custom files (preseed & provision)..."
 	@mkdir -p build/custom
 	@cp adalab.preseed build/custom/
