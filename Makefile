@@ -1,4 +1,4 @@
-.PHONY: clean clean-full download download-check
+.PHONY: clean clean-full download download-check clean-build extract-image edit-menu copy-custom-files create-iso-image
 
 # Change this to set the Ubuntu version
 UBUNTU_VERSION := 18.04
@@ -99,7 +99,23 @@ copy-custom-files: edit-menu
 	@cp adalab.preseed build/custom/
 	@cp adalab_provision.yml build/custom/
 
+# This tasks creates the iso image
+# FYI the order of the parameters of xorisofs is important...
 create-iso-image: copy-custom-files
 	@echo "--> Creating custom Adalab Ubuntu ISO..."
-	@xorrisofs -D -r -V "ADALAB_UBUNTU" -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat \
-		-no-emul-boot -boot-load-size 4 -boot-info-table -o dist/adalab-$(UBUNTU_ISO_NAME) build
+	@xorrisofs -verbose \
+		-volid "ADALAB_UBUNTU" \
+		-output dist/adalab-$(UBUNTU_ISO_NAME) \
+		-iso-level 3 \
+		-full-iso9660-filenames \
+		-rock \
+		-rational-rock \
+		-eltorito-boot isolinux/isolinux.bin \
+		-eltorito-catalog isolinux/boot.cat \
+		-no-emul-boot -boot-load-size 4 -boot-info-table \
+		-isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
+		-partition_offset 16 \
+		-eltorito-alt-boot --efi-boot boot/grub/efi.img -no-emul-boot \
+		-append_partition 2 0xef ./build/boot/grub/efi.img \
+		build
+#		-isohybrid-gpt-basdat \
