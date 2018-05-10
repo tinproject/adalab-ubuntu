@@ -76,7 +76,7 @@ extract-image: clean-build
 	@rm -rf iso_mount
 
 # This task change the menu to add
-ADALAB_KERNEL_PARAMS=file=/cdrom/custom/adalab.preseed boot=casper automatic-ubiquity initrd=/casper/initrd.lz quiet splash priority=low debian-installer/locale=es_ES keyboard-configuration/layoutcode=es languagechooser/language-name=Spanish countrychooser/shortlist=ES localechooser/supported-locales=es_ES.UTF-8
+ADALAB_KERNEL_PARAMS=file=/cdrom/custom/adalab.preseed boot=casper automatic-ubiquity initrd=/casper/initrd.lz quiet splash priority=critical debian-installer/locale=es_ES keyboard-configuration/layoutcode=es languagechooser/language-name=Spanish countrychooser/shortlist=ES localechooser/supported-locales=es_ES.UTF-8
 
 edit-menu: extract-image
 	@echo "--> Modifiying ISOLINUX image menu, add Adalab installer..."

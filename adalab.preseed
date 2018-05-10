@@ -46,18 +46,17 @@ tzdata tzdata/Zones/Europe string Madrid
 
 
 ## Partitioning
-#ubiquity partman-auto/disk string /dev/sda
-#ubiquity partman-auto/method select lvm
-#ubiquity partman-auto/choose_recipe sring atomic
-#
-#ubiquity partman-auto/automatically_partition string lvm
-#ubiquity partman-auto/init_automatically_partition string lvm
-#
-#ubiquity partman-lvm/confirm boolean true
-#ubiquity partman-lvm/confirm_nochanges boolean true
-#ubiquity partman-lvm/device_remove_lvm boolean true
-#ubiquity partman/confirm boolean true
-#ubiquity partman/confirm_nooverwrite boolean true
+ubiquity partman-auto/disk string /dev/sda
+ubiquity partman-auto/method string regular
+ubiquity partman-auto/init_automatically_partition string regular
+ubiquity partman-auto/choose_recipe string atomic
+ubiquity partman/confirm boolean true
+ubiquity partman/confirm_nooverwrite boolean true
+ubiquity partman-partitioning/confirm_write_new_label boolean true
+ubiquity partman-lvm/device_remove_lvm boolean true
+ubiquity partman-md/device_remove_md boolean true
+ubiquity partman/confirm_nochanges boolean true
+ubiquity partman/choose_partition string finish
 
 
 ## Apt setup
