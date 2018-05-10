@@ -12,6 +12,7 @@ DOWNLOAD_FILES := SHA256SUMS SHA256SUMS.gpg $(UBUNTU_ISO_NAME)
 
 downloads/$(DOWNLOAD_FILES):
 	@echo "--> Downloading $(@F)..."
+	@mkdir -p downloads
 	@wget -nv -N -P downloads --progress=bar:force:noscroll "$(UBUNTU_BASE_URL)/$(@F)"
 
 
@@ -47,11 +48,19 @@ clean-build:
 	@chmod -R +w build
 	@rm -rf build
 
+clean-dist:
+	@echo "--> Cleaning dist files..."
+	@mkdir -p dist
+	@rm -rf dist
+
+clean-downloads:
+	@echo "--> Cleaning dist files..."
+	@mkdir -p downloads
+	@rm -rf downloads
+
 clean: clean-build
 
-clean-full: clean
-	rm -rf dist/*
-	rm -rf downloads/*
+clean-full: clean-build clean-dist
 
 
 # This task extract ISO image contents for later modifications
@@ -103,6 +112,7 @@ copy-custom-files: edit-menu
 # FYI the order of the parameters of xorisofs is important...
 create-iso-image: copy-custom-files
 	@echo "--> Creating custom Adalab Ubuntu ISO..."
+	@mkdir -p dist
 	@xorrisofs -verbose \
 		-volid "ADALAB_UBUNTU" \
 		-output dist/adalab-$(UBUNTU_ISO_NAME) \
