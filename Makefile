@@ -33,7 +33,7 @@ download-check: downloads/$(DOWNLOAD_FILES)
 	@rm -rf $${GNUPGHOME}
 
 	@echo "--> Checking ISO image SHA sum..."
-	@(cd downloads && sha256sum --ignore-missing --check SHA256SUMS)
+	@(cd downloads && grep -e $(UBUNTU_ISO_NAME) SHA256SUMS | sha256sum -c -)
 
 	@echo "--> Ubuntu ISO image validated!"
 
