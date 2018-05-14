@@ -80,12 +80,9 @@ unattended-upgrades unattended-upgrades/enable_auto_updates boolean true
 grub-pc grub-pc/timeout string 50
 ubiquity grub-installer/only_debian boolean true
 ubiquity grub-installer/grub2_instead_of_grub_legacy boolean true
-d-i grub-installer/grub2_instead_of_grub_legacy boolean true
-d-i grub-installer/only_debian boolean true
-d-i finish-install/reboot_in_progress note
+ubiquity finish-install/reboot_in_progress note
 
 
 ## Finishing up the installation
-ubiquity ubiquity/poweroff boolean true
 ubiquity ubiquity/reboot boolean true
 ubiquity ubiquity/summary note
