@@ -36,7 +36,18 @@ Just burn into a DVD or to a USB stick using the same process of the Raspberry P
 
 ## Install & provision Adalab Ubuntu
 
-...
+Once burned the image on a DVD or on an USB pendrive use it to start the installation.
+
+The installation process should be completely automatic, whitout any promot.
+ 
+*WARNING*: The installer will *erase the disk* so *all the existing data will be lost*.
+
+After the install is finished the system will reboot automatically. At this point the install media will not be needed 
+so it can be removed.
+
+Once rebooted the computer will show a normal login screen. The provision step is not executed yet, it will be executed 
+in background using a systemd timer that start 4 minutes after the computer boots, and will finish removing itself and 
+shutting down the computer when done. It should not require any attention from the operator.
 
 ## Links & other documentation
 

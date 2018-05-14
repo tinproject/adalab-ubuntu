@@ -106,7 +106,7 @@ copy-custom-files: edit-menu
 	@echo "--> Copying custom files (preseed & provision)..."
 	@mkdir -p build/custom
 	@cp adalab.preseed build/custom/
-	@cp adalab_provision.yml build/custom/
+	@cp -R provision build/custom/
 
 # This tasks creates the iso image
 # FYI the order of the parameters of xorisofs is important...

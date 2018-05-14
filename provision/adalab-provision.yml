@@ -2,56 +2,56 @@
 - name: Playbook to provision Adalab computer's
   hosts: localhost
   tasks:
-    # This file install the apt repository for the NodeSource Node.jx 10.x version for Debian/Ubuntu
-    # Docs: https://github.com/nodesource/distributions
+    - name: "Upgrade system"
+      apt:
+        update_cache: yes
+        upgrade: dist
 
-    # NodeSource <gpg@nodesource.com>
-    # Fingerprint=9FD3 B784 BC1C 6FC3 1A8A  0A1C 1655 A0AB 6857 6280
+    - name: "Install utilities: {{ item }}"
+      apt:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - htop
+        - tree
+        - build-essential
+
+# Nodesource repository
     - name: Install NodeSource repository key
       apt_key:
         url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
         keyring: "/etc/apt/trusted.gpg.d/nodesource.gpg"
         id: "9FD3B784BC1C6FC31A8A0A1C1655A0AB68576280"
         state: present
-
-    - name: Install Node.js 10x packages NodeSource repositry.
+    - name: Install Node.js 8x packages NodeSource repositry.
       apt_repository:
-        repo: "deb https://deb.nodesource.com/node_10.x {{ ansible_lsb.codename }} main"
+        repo: "deb https://deb.nodesource.com/node_8.x {{ ansible_lsb.codename }} main"
         filename: "nodesource"
         mode : 0644
         state: present
         validate_certs: yes
-
-    - name: Install Node.js 10x source packages NodeSource repositry.
+    - name: Install Node.js 8x source packages NodeSource repositry.
       apt_repository:
-        repo: "deb-src https://deb.nodesource.com/node_10.x {{ ansible_lsb.codename }} main"
+        repo: "deb-src https://deb.nodesource.com/node_8.x {{ ansible_lsb.codename }} main"
         filename: "nodesource"
         mode : 0644
         state: present
         validate_certs: yes
-
-    - name: Install Node.js 10x source packages NodeSource repositry.
+    - name: Install Node.js 8x source packages NodeSource repositry.
       apt_repository:
-        repo: "deb-src https://deb.nodesource.com/node_10.x {{ ansible_lsb.codename }} main"
-        filename: "deb_nodesource_10x"
+        repo: "deb-src https://deb.nodesource.com/node_8.x {{ ansible_lsb.codename }} main"
+        filename: "deb_nodesource_8x"
         mode : 0644
         state: present
         validate_certs: yes
 
-
-    # This file install the apt repository for the Ubuntu Git Maintaners PPA release for Ubuntu
-    # Docs: https://launchpad.net/~git-core/+archive/ubuntu/ppa
-
-    # pub  1024R/E1DF1F24 2009-01-22 Launchpad PPA for Ubuntu Git Maintainers
-    # Fingerprint=E1DD 2702 88B4 E603 0699  E45F A171 5D88 E1DF 1F24
-
+# Git core ppa
     - name: Install Ubuntu Git Maintaners PPA repository key
       apt_key:
         keyring: "/etc/apt/trusted.gpg.d/git_ppa.gpg"
         keyserver: "ha.pool.sks-keyservers.net"
         id: "E1DD270288B4E6030699E45FA1715D88E1DF1F24"
         state: present
-
     - name: Install Ubuntu Git Maintaners PPA repositry.
       apt_repository:
         repo: "deb http://ppa.launchpad.net/git-core/ppa/ubuntu {{ ansible_lsb.codename }} main"
@@ -59,7 +59,6 @@
         mode : 0644
         state: present
         validate_certs: yes
-
     - name: Install Ubuntu Git Maintaners PPA source repositry.
       apt_repository:
         repo: "deb-src http://ppa.launchpad.net/git-core/ppa/ubuntu {{ ansible_lsb.codename }} main"
@@ -68,18 +67,13 @@
         state: present
         validate_certs: yes
 
-    # This file install the apt repository for Atom release for Debian/Ubuntu
-    # Docs: https://flight-manual.atom.io/getting-started/sections/installing-atom/#platform-linux
-
-    # https://packagecloud.io/AtomEditor/atom (https://packagecloud.io/docs#gpg_signing) <support@packagecloud.io>
-    # Fingerprint=0A0F AB86 0D48 5603 32EF  B581 B754 42BB DE9E 3B09
+# Atom repository
     - name: Install AtomEditor atom repository key
       apt_key:
         url: "https://packagecloud.io/AtomEditor/atom/gpgkey"
         keyring: "/etc/apt/trusted.gpg.d/AtomEditor_atom.gpg"
         id: "0A0FAB860D48560332EFB581B75442BBDE9E3B09"
         state: present
-
     - name: Install AtomEditor atom repositry.
       apt_repository:
         repo: "deb https://packagecloud.io/AtomEditor/atom/any/ any main"
@@ -87,7 +81,6 @@
         mode : 0644
         state: present
         validate_certs: yes
-
     - name: Install AtomEditor atom source repositry.
       apt_repository:
         repo: "deb-src https://packagecloud.io/AtomEditor/atom/any/ any main"
@@ -96,9 +89,8 @@
         state: present
         validate_certs: yes
 
-
-
-    - name: Install git, Node.js & Atom
+# Install from repositories
+    - name: "Install {{ item }}"
       apt:
         name: "{{ item }}"
         state: latest
@@ -108,27 +100,7 @@
         - nodejs
         - atom
 
-    # This list of tasks install Google Chrome for Debian/Ubuntu
-    # docs: https://www.google.com/chrome/ https://www.google.com/linuxrepositories/
-
-    # Google Chrome installer will manage the creation of the apt repo & apt key
-
-
-    # If running Ansible on virtualenv environments they can't find the python-apt of the system
-    # Install prerequisites and get the python-apt package from Debian repo (it's not on pypi):
-    # $ sudo apt-get install libapt-pkg-dev
-    # $ pip install git+https://anonscm.debian.org/cgit/apt/python-apt.git@ubuntu/trusty
-    - name: "Install Google Chrome package"
-      become: yes
-      apt:
-        deb: "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
-
-
-    # This list of tasks install Koala for Debian Linux flavours
-    # You could specify the KOALA_VERSION variable for a specific release
-    # Example: KOALA_VERSION: "2.3.0"
-    # Docs: https://github.com/oklai/koala
-
+# Installs Koala
     - block:
       - name: Get latest Koala release data from GitHub
         uri:
@@ -143,37 +115,57 @@
       delegate_to: 127.0.0.1
       check_mode: no
       when: KOALA_VERSION is undefined
-
     - name: "Download .deb package for Koala {{ KOALA_VERSION }}"
       get_url:
         url: "https://github.com/oklai/koala/releases/download/v{{ KOALA_VERSION }}/koala_{{ KOALA_VERSION }}_x86_64.deb"
         dest: "/tmp/koala_{{ KOALA_VERSION }}_x86_64.deb"
-
-    # If running Ansible on virtualenv environments they can't find the python-apt of the system
-    # Install prerequisites and get the python-apt package from Debian repo (it's not on pypi):
-    # $ sudo apt-get install libapt-pkg-dev
-    # $ pip install git+https://anonscm.debian.org/cgit/apt/python-apt.git@ubuntu/trusty
     - name: "Install Koala version {{ KOALA_VERSION }}"
       become: yes
       apt:
         deb: "/tmp/koala_{{ KOALA_VERSION }}_x86_64.deb"
 
 
-    # This list of tasks install Slack for Debian/Ubuntu
-    # docs: https://slack.com/intl/es-es/downloads/instructions/linux
+# Install Google Chrome
+    - name: "Define Google Chrome package name for install"
+      set_fact:
+        CHROME_PACKAGE_NAME: "google-chrome-stable_current_amd64.deb"
+    - name: "Download deb package for Google Chrome"
+      get_url:
+        url: "https://dl.google.com/linux/direct/{{ CHROME_PACKAGE_NAME }}"
+        dest: "/tmp/{{ CHROME_PACKAGE_NAME }}"
+    - name: "Install Google Chrome package"
+      become: yes
+      apt:
+        deb: "/tmp/{{ CHROME_PACKAGE_NAME }}"
 
-    # Slack installer will manage the creation of the apt repo & apt key
-
-
+# Install Slack
     - name: "Define Slack package version to install"
       set_fact:
         SLACK_PACKAGE_VERSION: "3.1.1"
-
-    # If running Ansible on virtualenv environments they can't find the python-apt of the system
-    # Install prerequisites and get the python-apt package from Debian repo (it's not on pypi):
-    # $ sudo apt-get install libapt-pkg-dev
-    # $ pip install git+https://anonscm.debian.org/cgit/apt/python-apt.git@ubuntu/trusty
-    - name: "Install Slack package {{ SLACK_PACKAGE_VERSION }}"
+    - name: "Define Slack package name for install"
+      set_fact:
+        SLACK_PACKAGE_NAME: "slack-desktop-{{ SLACK_PACKAGE_VERSION }}-amd64.deb"
+    - name: "Download deb package for Slack {{ SLACK_PACKAGE_NAME }}"
+      get_url:
+        url: "https://downloads.slack-edge.com/linux_releases/{{ SLACK_PACKAGE_NAME }}"
+        dest: "/tmp/{{ SLACK_PACKAGE_NAME }}"
+    - name: "Install Slack package {{ SLACK_PACKAGE_NAME }}"
       become: yes
       apt:
-        deb: "https://downloads.slack-edge.com/linux_releases/slack-desktop-{{ SLACK_PACKAGE_VERSION }}-amd64.deb"
+        deb: "/tmp/{{ SLACK_PACKAGE_NAME }}"
+
+
+# Uninstall the provision timer and service itself
+    - name: "Removes the adalab-provision.timer"
+      systemd:
+        name: adalab-provision.timer
+        state: stopped
+        enabled: no
+
+    - name: "Removes adalab-provision service and timer files"
+      file:
+        path: "/etc/systemd/system/{{ item }}"
+        state: absent
+      with_items:
+        - adalab-provision.timer
+        - adalab-provision.service

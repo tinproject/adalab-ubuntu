@@ -1,0 +1,12 @@
+[Unit]
+Description=Adalab provision on fist boot, autoremove when done
+
+[Timer]
+# Wait 4 minutes since boot
+OnBootSec=4min
+# Retries every hour, should be removed on succesfull run
+OnUnitActiveSec=1h
+Unit=adalab-provision.service
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=Adalab provision service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/provision/adalab-provision.sh
+WorkingDirectory=/opt/provision
+User=root
+Group=root

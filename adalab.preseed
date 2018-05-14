@@ -79,10 +79,21 @@ unattended-upgrades unattended-upgrades/enable_auto_updates boolean true
 ## Boot loader installation
 grub-pc grub-pc/timeout string 50
 ubiquity grub-installer/only_debian boolean true
+ubiquity grub-installer/with_other_os boolean true
 ubiquity grub-installer/grub2_instead_of_grub_legacy boolean true
-ubiquity finish-install/reboot_in_progress note
+ubiquity grub-installer/bootdev string /dev/sda
 
 
 ## Finishing up the installation
 ubiquity ubiquity/reboot boolean true
 ubiquity ubiquity/summary note
+ubiquity finish-install/reboot_in_progress note
+
+
+# Custom Commands
+ubiquity ubiquity/success_command string echo "Running preseed/late_command" ;\
+  cp -a /cdrom/custom/provision/adalab-provision.timer /target/etc/systemd/system/ ;\
+  cp -a /cdrom/custom/provision/adalab-provision.service /target/etc/systemd/system/ ;\
+  ln -s /target/etc/systemd/system/adalab-provision.timer /target/etc/systemd/system/multi-user.target.wants/adalab-provision.timer ;\
+  cp -a /cdrom/custom/provision /target/opt/ ;\
+  in-target df -ha > /target/var/log/installer/success_command.log
