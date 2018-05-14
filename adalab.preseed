@@ -46,17 +46,17 @@ tzdata tzdata/Zones/Europe string Madrid
 
 
 ## Partitioning
-ubiquity partman-auto/disk string /dev/sda
-ubiquity partman-auto/method string regular
-ubiquity partman-auto/init_automatically_partition string regular
-ubiquity partman-auto/choose_recipe string atomic
-ubiquity partman/confirm boolean true
-ubiquity partman/confirm_nooverwrite boolean true
-ubiquity partman-partitioning/confirm_write_new_label boolean true
-ubiquity partman-lvm/device_remove_lvm boolean true
-ubiquity partman-md/device_remove_md boolean true
-ubiquity partman/confirm_nochanges boolean true
-ubiquity partman/choose_partition string finish
+#ubiquity partman-auto/disk string /dev/sda
+#ubiquity partman-auto/method string regular
+#ubiquity partman-auto/init_automatically_partition string regular
+#ubiquity partman-auto/choose_recipe string atomic
+#ubiquity partman/confirm boolean true
+#ubiquity partman/confirm_nooverwrite boolean true
+#ubiquity partman-partitioning/confirm_write_new_label boolean true
+#ubiquity partman-lvm/device_remove_lvm boolean true
+#ubiquity partman-md/device_remove_md boolean true
+#ubiquity partman/confirm_nochanges boolean true
+#ubiquity partman/choose_partition string finish
 
 
 ## Apt setup
@@ -77,11 +77,11 @@ unattended-upgrades unattended-upgrades/enable_auto_updates boolean true
 
 
 ## Boot loader installation
-grub-pc grub-pc/timeout string 50
-ubiquity grub-installer/only_debian boolean true
-ubiquity grub-installer/with_other_os boolean true
-ubiquity grub-installer/grub2_instead_of_grub_legacy boolean true
-ubiquity grub-installer/bootdev string /dev/sda
+#grub-pc grub-pc/timeout string 50
+#ubiquity grub-installer/only_debian boolean true
+#ubiquity grub-installer/with_other_os boolean true
+#ubiquity grub-installer/grub2_instead_of_grub_legacy boolean true
+#ubiquity grub-installer/bootdev string /dev/sda
 
 
 ## Finishing up the installation
