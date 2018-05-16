@@ -16,8 +16,8 @@ keyboard-configuration keyboard-configuration/xkb-keymap string es
 
 ## Network configuration
 # Try to use default DHCP
-ubiquity netcfg/hostname string hopper
-ubiquity netcfg/get_hostname string hopper
+ubiquity netcfg/hostname string adalaptop
+ubiquity netcfg/get_hostname string adalaptop
 
 
 ## Mirror settings
@@ -28,7 +28,7 @@ ubiquity mirror/country string ES
 ubiquity passwd/root-login boolean false
 ubiquity passwd/make-user boolean true
 ubiquity passwd/auto-login boolean false
-ubiquity passwd/user-fullname string Awesome Adalaber
+ubiquity passwd/user-fullname string Adalaber
 ubiquity passwd/username string adalaber
 # ubiquity passwd/user-password password insecure
 # ubiquity passwd/user-password-again password insecure
