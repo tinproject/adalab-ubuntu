@@ -11,7 +11,7 @@ The process is meant to be done on Debian/Ubuntu/Mint GNU/Linux distributions.
 The process needs this packages:
 ```bash
 sudo apt-get update
-sudo apt-get install -y wget gnupg xorriso isolinux
+sudo apt-get install -y make wget gnupg xorriso isolinux
 ```
 
 ### Create the image
