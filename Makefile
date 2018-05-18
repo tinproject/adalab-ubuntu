@@ -5,7 +5,7 @@ UBUNTU_VERSION := 18.04
 UBUNTU_ISO_NAME := ubuntu-$(UBUNTU_VERSION)-desktop-amd64.iso
 
 #UBUNTU_MIRROR := http://releases.ubuntu.com/
-UBUNTU_MIRROR := http://ftp.rediris.es/sites/releases.ubuntu.com/
+UBUNTU_MIRROR := https://ftp.rediris.es/sites/releases.ubuntu.com/
 
 UBUNTU_BASE_URL := $(UBUNTU_MIRROR)$(UBUNTU_VERSION)
 DOWNLOAD_FILES := SHA256SUMS SHA256SUMS.gpg $(UBUNTU_ISO_NAME)
