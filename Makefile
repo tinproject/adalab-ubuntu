@@ -1,7 +1,7 @@
 .PHONY: clean clean-full download download-check clean-build extract-image edit-menu copy-custom-files create-iso-image
 
 # Change this to set the Ubuntu version
-UBUNTU_VERSION := 18.04
+UBUNTU_VERSION := 18.04.1
 UBUNTU_ISO_NAME := ubuntu-$(UBUNTU_VERSION)-desktop-amd64.iso
 
 #UBUNTU_MIRROR := http://releases.ubuntu.com/
