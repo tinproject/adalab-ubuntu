@@ -67,24 +67,18 @@
         state: present
         validate_certs: yes
 
-# Atom repository
-    - name: Install AtomEditor atom repository key
+# Microsoft Visual Studio Code repository
+    - name: Install Microsoft Visual Studio Code repository key
       apt_key:
-        url: "https://packagecloud.io/AtomEditor/atom/gpgkey"
-        keyring: "/etc/apt/trusted.gpg.d/AtomEditor_atom.gpg"
-        id: "0A0FAB860D48560332EFB581B75442BBDE9E3B09"
+        url: "https://packages.microsoft.com/keys/microsoft.asc"
+        keyring: "/etc/apt/trusted.gpg.d/vscode.gpg"
+        id: "BC528686B50D79E339D3721CEB3E94ADBE1229CF"
         state: present
-    - name: Install AtomEditor atom repositry.
+
+    - name: Install Microsoft Visual Studio Code repositry.
       apt_repository:
-        repo: "deb https://packagecloud.io/AtomEditor/atom/any/ any main"
-        filename: "AtomEditor_atom"
-        mode : 0644
-        state: present
-        validate_certs: yes
-    - name: Install AtomEditor atom source repositry.
-      apt_repository:
-        repo: "deb-src https://packagecloud.io/AtomEditor/atom/any/ any main"
-        filename: "AtomEditor_atom"
+        repo: "deb https://packages.microsoft.com/repos/vscode stable main"
+        filename: "vscode"
         mode : 0644
         state: present
         validate_certs: yes
@@ -98,31 +92,7 @@
       with_items:
         - git
         - nodejs
-        - atom
-
-# Installs Koala
-    - block:
-      - name: Get latest Koala release data from GitHub
-        uri:
-          url: "https://api.github.com/repos/oklai/koala/releases/latest"
-          method: GET
-          validate_certs: yes
-          status_code: 200
-          return_content: yes
-        register: github_api_json_response
-      - name: Set latest Koala release name
-        set_fact: KOALA_VERSION="{{ github_api_json_response.json.tag_name | regex_replace('^v(.*)$', '\\1')}}"
-      delegate_to: 127.0.0.1
-      check_mode: no
-      when: KOALA_VERSION is undefined
-    - name: "Download .deb package for Koala {{ KOALA_VERSION }}"
-      get_url:
-        url: "https://github.com/oklai/koala/releases/download/v{{ KOALA_VERSION }}/koala_{{ KOALA_VERSION }}_x86_64.deb"
-        dest: "/tmp/koala_{{ KOALA_VERSION }}_x86_64.deb"
-    - name: "Install Koala version {{ KOALA_VERSION }}"
-      become: yes
-      apt:
-        deb: "/tmp/koala_{{ KOALA_VERSION }}_x86_64.deb"
+        - code
 
 
 # Install Google Chrome
